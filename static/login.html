@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Login</title>
+	<style>
+		* {
+			padding: 0%;
+			margin: 0%;
+		}
+
+		html {
+			height: 100%;
+		}
+
+		body {
+			background: linear-gradient(#eb3349, #f45c43);
+			font-family: 'Open Sans', sans-serif;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			min-height: 100%;
+			margin: 0;
+		}
+
+		.container {
+			background-color: #fff;
+			border-radius: 5px;
+			width: 400px;
+			max-width: 100%;
+		}
+
+		.header {
+			text-align: center;
+			background-color: #f45c43;
+			padding: 20px 40px;
+			margin-bottom: 10px;
+		}
+
+		.form {
+			padding: 25px 40px;
+		}
+
+		.user-details {
+			margin-bottom: 10px;
+			margin-right: 10px;
+			padding: 5px;
+			position: relative;
+		}
+
+		.user-details input {
+			border: 2px solid #eb3349;
+			border-radius: 4px;
+			font-size: 12px;
+			padding: 10px;
+			width: 90%;
+			margin-left: 10px;
+
+		}
+
+		.button {
+			background: linear-gradient(#f45c43, #eb3349);
+			border: 2px solid #eb3349;
+			border-radius: 50px;
+			color: white;
+			font-size: 18px;
+			padding: 10px;
+			margin-top: 1%;
+			margin-left: 10%;
+			margin-bottom: 5%;
+			width: 80%;
+		}
+	</style>
+</head>
+
+<body>
+
+	<div class="container">
+		<div class="header">
+			<h2>Login</h2>
+		</div>
+		<form id="login">
+			<div class="user-details">
+				<input type="text" autocomplete="off" placeholder="Username" id="username" required />
+			</div>
+
+			<div class="user-details">
+				<input type="password" autocomplete="off" placeholder="Password" id="password" required />
+			</div>
+			<input type="submit" value="Sign in" class="button" />
+		</form>
+	</div>
+
+	<script>
+		const form = document.getElementById('login')
+		form.addEventListener('submit', login)
+
+		async function login(event) {
+			event.preventDefault()
+			const username = document.getElementById('username').value
+			const password = document.getElementById('password').value
+
+			const result = await fetch('/api/login', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					username,
+					password
+				})
+			}).then((res) => res.json())
+
+			if (result.status === 'ok') {
+				console.log('Got the token: ', result.data)
+				localStorage.setItem('token', result.data)
+				alert('Success')
+			} else {
+				alert(result.error)
+			}
+		}
+	</script>
+</body>
+
+</html>
